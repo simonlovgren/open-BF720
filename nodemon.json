@@ -1,0 +1,3 @@
+{   
+  "ignore": ["users.json", "scale_settings.json", "measurements.json"] 
+}

@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "b5d63511-4e3f-41af-baf8-75835d42111a",
+		"name": "scale",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Disconnect scale",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/disconnect",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"manage",
+						"disconnect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List scales",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/availableScales",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"manage",
+						"availableScales"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Scale settings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/settings",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"manage",
+						"settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create settings",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\":\"c8b21ecc5222\",\n    \"name\": \"scaley\",\n    \"dailySyncs\": 14\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/settings",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"manage",
+						"settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"benny\",\n    \"gender\": \"m\",\n    \"dateOfBirth\":\"1990-01-01\",\n    \"heightInCm\": 175\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/add",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"user",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all measurements",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/measurements/",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"measurements",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get measurement for user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/measurements/user/?id=d4bdd31f-d49b-4c8a-af34-1529e3e8b960",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"measurements",
+						"user",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "d4bdd31f-d49b-4c8a-af34-1529e3e8b960"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userIndex\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/login",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
