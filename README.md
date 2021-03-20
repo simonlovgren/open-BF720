@@ -1,5 +1,5 @@
 # open-BF720
-Solution for automatically syncing weight measurements from a Beurer BF 720 scale. 
+Solution for automatic sync of weight measurements from a Beurer BF 720 scale. 
 
 Application will sync measurements from the scale at a predefined rate (Cron schedule). Measurements are stored by the application in a file on the RPI. Synced measurements can be retreived using the application REST API.
 
@@ -9,9 +9,9 @@ Application will sync measurements from the scale at a predefined rate (Cron sch
 
 ## Use case
 
-Solution allows for easy storage and automatic retrieval of weight measurements from the scale. A user only needs to weigh in. At a predfined schedulem the app will sync measurements from the scale to the RPI (default schedule: once every 24h, at midnight). 
+Solution allows for easy storage and automatic retrieval of weight measurements from the scale. An user only needs to weigh in. At a predefined schedule the app will sync measurements from the scale to the RPI (default schedule: once every 24h, at midnight). 
 
-- Supported User requests (REST):
+- Supported user requests (REST):
     - List scales (Bluetooth scan for BF720 devices)
     - Get existing scale settings
     - Create scale settings
@@ -20,7 +20,7 @@ Solution allows for easy storage and automatic retrieval of weight measurements 
     - List all measurements for a user
     - Login user (sync with scale for new measurements)
 
-Complete list with examples: See postman collection: open-bf720.postman_collection.json
+Complete list with examples: See postman collection: **open-bf720.postman_collection.json**
 
 # Prerequisites
 - Environment for running npm/node 
@@ -38,9 +38,7 @@ Install bluetooth pacman packages:
 $ sudo pacman -Sy bluez bluez-libs bluez-utils
 ```
 
-Make sure that you have a Bluetooth BLE USB adapter or 
-
-See if the the kernel found the bluetooth device:
+Check if the the kernel found the bluetooth device:
 ```sh 
 $ sudo dmesg | grep Bluetooth
 
@@ -81,7 +79,7 @@ $ sudo systemctl start bluetooth
 
 
 ### Nginx
-Nginx is used as a reverse proxy for routing everything to http://localhost:3000, the endpoint for the BF720 REST API.
+Nginx is used as a reverse proxy for routing everything to http://localhost:3000 - the endpoint for the BF720 REST API.
 
 1. Install Nginx
 ```sh
@@ -117,14 +115,14 @@ $ sudo systemctl enable nginx.service
 $ sudo systemctl start nginx.service
 ```
 
-## NPM & node - Process manager for node.js
-
+## NPM & Node
 Install nodejs and NPM
 ```sh
 $ sudo pacman -Sy nodejs
 $ sudo pacman -Sy npm
 ```
 
+Check installed versions:
 ```sh
 # Versions
 $ node --version
@@ -134,20 +132,20 @@ $ npm --version
 > 6.14.11
 ```
 
-Grant the node binary cap_net_raw privileges, so it can start/stop BLE advertising.
+Grant the node binary **cap_net_raw privileges**, so it can start/stop BLE advertising.
 ```sh
 sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 ```
 
 ## PM2 - Process manager for node.js
-PM2 is used to ensure that the application is running reliably and that it will start automatically if the Rpi would restart.
+PM2 is used to ensure that the application is running reliably and automatically (if the Rpi would restart).
 
 Install pm2
 ```sh
 $ sudo npm install -g pm2
 ```
 
-Register pm2 to start automatically at RPi boot
+Register pm2 to start automatically at RPI boot
 ```sh
 $ sudo pm2 startup
 ```
@@ -157,19 +155,19 @@ The application will need to be configured before use.
 
 Two configuration are required:
 1. Application boot configuration
-    - Port for exposing the endpoint (default 3000)
-    - Debug level (default: warn)
-    - Cron schedule (default: once per day 1 min past midnight: '1 0 * * *')
+    - **Port** - for exposing the endpoint (default 3000)
+    - **Debug level** - (default: warn)
+    - **Cron schedule** - (default: once per day 1 min past midnight: '1 0 * * *')
 2. Scale & User configuration in application
     - Scan for bluetooth scale and register it in app
     - Add user(s)
 
 ## Application boot configuration
-Go to the .env file and edit the corresponding paramaters
+Go to the **.env** file and edit the corresponding paramaters.
 
 ## Scale & User configuration in application
 
-### 1. Begin with making a request for available scales.
+### 1. Begin with making a request for available scales
 
 GET (/manage/availableScales): List scales:
 ``` json
@@ -181,9 +179,10 @@ GET (/manage/availableScales): List scales:
     }
 ]
 ```
-### 2. Create scale setting by sending the followin POST request:
+### 2. Create scale setting 
+Take id from the found scale and send the following POST request:
 
-POST (/manage/settings): Create scaling setting:
+POST (/manage/settings): Create scaling setting
 ``` json
 # Body JSON payload
 {
@@ -192,7 +191,7 @@ POST (/manage/settings): Create scaling setting:
 }
 ```
 
-### 3. Add an user by sending the following POST request:
+### 3. Add an user by sending the following POST request
 
 POST (/user/add): Add new user
 ```json
@@ -207,9 +206,9 @@ POST (/user/add): Add new user
 
 **Note**: The scale will turn on. The user that is being registered should now stand on in att wait for the intial measurement to complete.
 
-### 4. Confirm that the user exists:
+### 4. Confirm that the user exists
 
-GET(/user/): List users:
+GET(/user/): List users
 ```json
 # Rest Response
 [
@@ -222,21 +221,11 @@ GET(/user/): List users:
         "dateOfBirth": "1985-03-02",
         "consentCode": 9490,
         "index": 1
-    },
-    {
-        "id": "d4bdd51f-d49b-4c8a-af34-1529e3e8b960",
-        "name": "Bar",
-        "initials": "B",
-        "heightInCm": 142,
-        "gender": "f",
-        "dateOfBirth": "1984-01-01",
-        "consentCode": 3142,
-        "index": 2
     }
 ]
 ```
 
-### 5. To check for new measurements (stored on the scale). Login the user to check measurements for;
+### 5. To check for new measurements (stored on the scale). Login the user to check measurements for
 
 POST(/user/login): Login user
 ```json
@@ -260,7 +249,7 @@ GET (/measurements/): Get all measurements
 ]
 ```
 
-The scale and application are now correctly set up with one registered user. Register more users by repeating step 3.
+The scale and application are now correctly set up with one registered user. Register more users by repeating **step 3**.
 
 # Build application
 
@@ -275,7 +264,7 @@ $ npm build
 $ npm start
 ```
 
-## Run using pm2 (Best option)
+## Run using pm2 (Preferred option)
 
 ```sh
 $ pwd
