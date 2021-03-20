@@ -163,7 +163,7 @@ Two configuration are required:
     - Add user(s)
 
 ## Application boot configuration
-Go to the **.env** file and edit the corresponding paramaters.
+Rename the **example.env** file to **.env** file and edit the corresponding paramaters.
 
 ## Scale & User configuration in application
 
