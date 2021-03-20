@@ -225,7 +225,7 @@ GET(/user/): List users
 ]
 ```
 
-### 5. To check for new measurements (stored on the scale). Login the user to check measurements for
+### 5. To check(sync) for new measurements (stored on the scale) 
 
 POST(/user/login): Login user
 ```json
