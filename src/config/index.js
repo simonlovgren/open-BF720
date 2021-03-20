@@ -16,4 +16,6 @@ export default {
     level: process.env.LOG_LEVEL || 'silly',
   },
 
+  cron_schedule_sync: process.env.CRON_SCHEDULE_SYNC || '1 0 * * *'
+
 };

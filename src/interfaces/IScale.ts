@@ -18,5 +18,4 @@ export interface IScaleDAO {
 export interface ISettings {
   id: string;
   name?: string;
-  dailySyncs: number;
 }

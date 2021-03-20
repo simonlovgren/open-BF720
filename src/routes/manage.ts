@@ -27,8 +27,7 @@ manageRouter.get('/settings', (request, response) => {
 manageRouter.post('/settings', (request, response) => {
   const settings:ISettings = {
     id: request.body.id,
-    name: request.body.name ? request.body.name : "",
-    dailySyncs: request.body.dailySyncs
+    name: request.body.name ? request.body.name : ""
   }
   scaleService.setScaleSettings(settings).then(() => {
     return response.json("Settings updated!");

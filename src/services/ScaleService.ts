@@ -34,10 +34,6 @@ class ScaleService {
     return this.settingsDAO.getSettings();
   }
 
-  getDailySyncInterval() : Promise<number> {
-    return this.settingsDAO.getSettings().then(settings => settings.dailySyncs);
-  }
-
   registerOnMeasurement(onMeasurement: (measurement:IMeasurement) => void){
     this.scaleDAO.registerOnMeasurement(onMeasurement);
   }

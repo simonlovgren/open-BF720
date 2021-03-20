@@ -6,7 +6,6 @@ import pino  from 'pino';
 import expressPino from 'express-pino-logger';
 
 import routes from './routes';
-import bodyParser from 'body-parser';
 
 import cron from 'node-cron';
 import UserService from './services/UserService';
@@ -22,15 +21,16 @@ const expressLogger = expressPino({ logger });
 const startRestServer = async () => {
   const app = express();
 
-  app.use(bodyParser.json());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(expressLogger);
   app.use(routes);
 
   app.listen(config.port, () => {
     logger.info(`
-      ################################################
-      🛡️    BF720 listening on port: ${config.port}  🛡️
-      ################################################
+      ##########################################################
+      🛡️    BF720 REST API listening on port: ${config.port}  🛡️
+      ##########################################################
     `);
   }).on('error', err => {
     logger.error(err);
@@ -40,7 +40,7 @@ const startRestServer = async () => {
 
 const sleep = (ms) => new Promise((resolve) => {setTimeout(resolve, ms);});
 
-cron.schedule('1 0 * * *', async () => {
+cron.schedule(config.cron_schedule_sync, async () => {
   console.log('-------------------');
   const userService = Container.get(UserService);
   const scaleService = Container.get(ScaleService);

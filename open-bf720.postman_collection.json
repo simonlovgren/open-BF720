@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "b5d63511-4e3f-41af-baf8-75835d42111a",
-		"name": "scale",
+		"name": "open-BF720",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -97,7 +97,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"benny\",\n    \"gender\": \"m\",\n    \"dateOfBirth\":\"1990-01-01\",\n    \"heightInCm\": 175\n}",
+					"raw": "{\n    \"name\":\"eros\",\n    \"gender\": \"m\",\n    \"dateOfBirth\":\"1980-01-01\",\n    \"heightInCm\": 175\n}",
 					"options": {
 						"raw": {
 							"language": "json"

@@ -43,7 +43,7 @@ r.post('/login', (request, response) => {
   const userProfile = userService.getUserProfile(p.userIndex);
 
   userService.loginUser(userProfile).then(() => {
-    return response.json("User loggedin!");
+    return response.json("User logged in!");
   }).catch(error => {
     console.log(error);
     return response.status(404).json(error);
