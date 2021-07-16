@@ -86,7 +86,7 @@ Nginx is used as a reverse proxy for routing everything to http://localhost:3000
 $ sudo pacman -Sy nginx
 ```
 
-2. Update nginx configuration file: /etc/nginx/sites-available/default
+2. Create nginx configuration file: /etc/nginx/sites-available/default (note sites-available folder might need to be created)
 ```sh
 # /etc/nginx/sites-available/default contents:
 server {
