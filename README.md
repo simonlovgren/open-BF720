@@ -77,44 +77,6 @@ $ sudo systemctl enable bluetooth
 $ sudo systemctl start bluetooth
 ```
 
-
-### Nginx
-Nginx is used as a reverse proxy for routing everything to http://localhost:3000 - the endpoint for the BF720 REST API.
-
-1. Install Nginx
-```sh
-$ sudo pacman -Sy nginx
-```
-
-2. Create nginx configuration file: /etc/nginx/sites-available/default (note sites-available folder might need to be created)
-```sh
-# /etc/nginx/sites-available/default contents:
-server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-
-        root /var/www/html;
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name _;
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
-3. Enable and start Nginx
-
-```sh 
-$ sudo systemctl enable nginx.service
-$ sudo systemctl start nginx.service
-```
-
 ## NPM & Node
 Install nodejs and NPM
 ```sh
