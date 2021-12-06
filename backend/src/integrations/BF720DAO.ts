@@ -22,7 +22,7 @@ const TAKE_MEASUREMENT = 0x00;
 const intToHex = (value) => value.toString(16).length % 2 != 0 ? '0'+ value.toString(16) :  value.toString(16)
 const to_bytes = (hex) => Buffer.from(hex, 'hex');
 
-class Bf720DAO implements IScaleDAO { 
+class Bf720DAO implements IScaleDAO {
   bluetoothPowerOn: boolean = false;
   scale: noble.Peripheral;
   discoveredPeripherals: noble.Peripheral[] = [];
@@ -42,7 +42,7 @@ class Bf720DAO implements IScaleDAO {
   height: ICharacteristic = {id: '2a8e'}
 
   callbackScaleReady: () => void;
-  
+
   constructor() {
 
     noble.on('stateChange', state => {
@@ -65,7 +65,7 @@ class Bf720DAO implements IScaleDAO {
   }
 
   scaleDiscovery(setting:ISettings=null):void{
-    
+
     console.log(setting)
     let discoverInterval;
 
@@ -75,9 +75,9 @@ class Bf720DAO implements IScaleDAO {
         console.log(`scale found: ${peripheral.uuid}`);
         this.discoveredPeripherals.push(peripheral);
         console.log(`scale added: ${peripheral.uuid}`);
-      } 
+      }
     });
-    
+
     const discoverScales = () => {
       if(this.discoveredPeripherals.length > 0){
         console.log(`Scales found: ${this.discoveredPeripherals.length}. Turning of discovery`)
@@ -135,8 +135,8 @@ class Bf720DAO implements IScaleDAO {
       () => this.sendCommandWithResponse(createUserMessage(), this.userControlPoint)
     ).then((response:Buffer):Promise<void> => new Promise((resolve, reject) => {
         if(
-          response[0] === OP_CODE_RESPONSE_CODE && 
-          response[1] === REQUEST_OP_CODE_REGISTER_NEW_USER && 
+          response[0] === OP_CODE_RESPONSE_CODE &&
+          response[1] === REQUEST_OP_CODE_REGISTER_NEW_USER &&
           response[2] === REQUEST_SUCCESS
         ){
           console.log(`User succesfully created! User index:${response[3].toString(16)}`)
@@ -184,9 +184,15 @@ class Bf720DAO implements IScaleDAO {
     ).then(() => this.activityLevel.handle.writeAsync(
       Buffer.from([3]), false // Hard code Activity level 3
       )
-    ).then(() => this.initials.handle.writeAsync(
-      Buffer.from([user.initials]), false 
-    ));
+    ).then(() => {
+        const payload = [0x20, 0x20, 0x20];
+        for(let i=0; i < user.initials.length ; i++) {
+          payload[i] = user.initials.charCodeAt(i);
+        }
+        console.log(`Initials byte payload: ${Buffer.from(payload).toString('hex')}`)
+        return this.initials.handle.writeAsync(Buffer.from(payload), false);
+      }
+    );
   }
 
   loginUser(user:IUserProfile):Promise<void>{
@@ -199,13 +205,13 @@ class Bf720DAO implements IScaleDAO {
     console.log(`Trying to login user: ${user.name}`)
 
     return this.sendCommandWithResponse(
-      createLoginUserMessage(), 
+      createLoginUserMessage(),
       this.userControlPoint
     ).then((response:Buffer) => {
       return new Promise((resolve, reject) => {
         if(
-          response[0] === OP_CODE_RESPONSE_CODE && 
-          response[1] === REQUEST_OP_CODE_LOGIN_USER && 
+          response[0] === OP_CODE_RESPONSE_CODE &&
+          response[1] === REQUEST_OP_CODE_LOGIN_USER &&
           response[2] === REQUEST_SUCCESS
         ){
           console.log(`User ${user.name} has been successfully logged in`)
@@ -248,9 +254,9 @@ class Bf720DAO implements IScaleDAO {
       [],
       [
         this.weightMeasurement.id,
-        this.userControlPoint.id, 
-        this.userList.id, 
-        this.currentTime.id, 
+        this.userControlPoint.id,
+        this.userList.id,
+        this.currentTime.id,
         this.takeMeasurement.id,
         this.databaseIncrement.id,
         this.gender.id,
@@ -324,11 +330,11 @@ class Bf720DAO implements IScaleDAO {
   private prepareConsentCode(consentCode:number):Buffer {
     return to_bytes(intToHex(consentCode)).reverse();
   }
-  
+
   private onWeightMeasurement(data) {
     console.log("Weight measurement received!")
     console.log(`Value: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-    
+
     const weight = parseInt(data.slice(1,3).reverse().toString('hex'),16);
     const year = parseInt(data.slice(3,5).reverse().toString('hex'),16);
     const month = parseInt(intToHex(data[5]),16);
@@ -341,7 +347,7 @@ class Bf720DAO implements IScaleDAO {
 
     const measurement:IMeasurement = {
       index:parseInt(data[10],16),
-      weightInKg: 5*weight/1000.0, // Weight unit is 5 grams. 
+      weightInKg: 5*weight/1000.0, // Weight unit is 5 grams.
       timestamp: new Date(year, month-1, day, hours, minutes, seconds).toISOString()
     }
     console.log(measurement);
