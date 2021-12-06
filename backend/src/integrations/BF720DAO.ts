@@ -27,7 +27,9 @@ class Bf720DAO implements IScaleDAO {
   scale: noble.Peripheral;
   discoveredPeripherals: noble.Peripheral[] = [];
   isConnected: boolean = false;
-  onMeasurement:(measurement:IMeasurement) => void;
+  onCreateMeasurement:(measurement:IMeasurement) => void;
+  onUpdateMeasurement:(measurement:IMeasurement) => void;
+  onStoreMeasurement:() => void;
 
   currentTime: ICharacteristic = {id: '2a2b'}
   userList: ICharacteristic = {id: '1'}
@@ -37,6 +39,7 @@ class Bf720DAO implements IScaleDAO {
   userControlPoint: ICharacteristic = {id: '2a9f'}
   databaseIncrement: ICharacteristic = {id: '2a99'}
   weightMeasurement: ICharacteristic = {id: '2a9d'}
+  bodyCompositionMeasurement: ICharacteristic = {id: '2a9c'}
   dateOfBirth: ICharacteristic = {id: '2a85'}
   gender: ICharacteristic = {id: '2a8c'}
   height: ICharacteristic = {id: '2a8e'}
@@ -60,8 +63,16 @@ class Bf720DAO implements IScaleDAO {
 
   isScaleConnected():boolean {return this.isConnected};
 
-  registerOnMeasurement(onMeasurement: (measurement:IMeasurement) => void) {
-    this.onMeasurement = onMeasurement;
+  registerOnCreateMeasurement(cb: (measurement:IMeasurement) => void){
+    this.onCreateMeasurement = cb;
+  }
+
+  registerOnUpdateMeasurement(cb: (measurement:IMeasurement) => void){
+    this.onUpdateMeasurement = cb;
+  }
+
+  registerOnStoreMeasurement(cb: () => void){
+    this.onStoreMeasurement = cb;
   }
 
   scaleDiscovery(setting:ISettings=null):void{
@@ -254,6 +265,7 @@ class Bf720DAO implements IScaleDAO {
       [],
       [
         this.weightMeasurement.id,
+        this.bodyCompositionMeasurement.id,
         this.userControlPoint.id,
         this.userList.id,
         this.currentTime.id,
@@ -276,6 +288,11 @@ class Bf720DAO implements IScaleDAO {
               characteristic.on('data', (data, isNotification) => this.onWeightMeasurement(data));
               promises.push(characteristic.subscribeAsync());
               break;
+            case this.bodyCompositionMeasurement.id:
+                this.bodyCompositionMeasurement.handle = characteristic;
+                characteristic.on('data', (data, isNotification) => this.onBodyCharacteristicMeasurement(data));
+                promises.push(characteristic.subscribeAsync());
+                break;
             case this.userList.id:
               this.userList.handle = characteristic;
               promises.push(characteristic.subscribeAsync());
@@ -351,7 +368,31 @@ class Bf720DAO implements IScaleDAO {
       timestamp: new Date(year, month-1, day, hours, minutes, seconds).toISOString()
     }
     console.log(measurement);
-    this.onMeasurement(measurement);
+    this.onCreateMeasurement(measurement);
+  }
+
+  private onBodyCharacteristicMeasurement(data) {
+    console.log("Body characteristic measurement received!")
+    console.log(`Value: ${data.toString('hex')} | '${data.toString('ascii')}'`);
+
+    const bodyFat   = parseInt(data.slice(0,2).reverse().toString('hex'),16)/10.0;
+    const bmr       = Math.round((parseInt(data.slice(2,4).reverse().toString('hex'),16)/4.1868)*10.0)/10.0;
+    const muscles   = parseInt(data.slice(4,6).reverse().toString('hex'),16)/10.0;
+    const slm       = (parseInt(data.slice(6,8).reverse().toString('hex'),16)*5)/1000.0;
+    const water     = (parseInt(data.slice(8,10).reverse().toString('hex'),16)*5)/1000.0;
+    const impedance = parseInt(data.slice(10,12).reverse().toString('hex'),16)/10.0;
+
+    const measurement:IMeasurement = {
+      bodyFatInPct     : bodyFat,
+      bmrInJoule       : bmr,
+      musclesInPct     : muscles,
+      softLeanMassInKg : slm,
+      waterMassInKg    : water,
+      impedanceInOhm   : impedance
+    }
+
+    this.onUpdateMeasurement(measurement);
+    this.onStoreMeasurement();
   }
 
 }

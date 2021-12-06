@@ -12,7 +12,7 @@ import { IMeasurement } from '../interfaces/IMeasurement';
 class ScaleService {
   scaleDAO:BF720DAO;
   settingsDAO: ScaleSettingsDAO;
-  
+
   constructor() {
     this.scaleDAO = new BF720DAO();
     this.settingsDAO = new ScaleSettingsDAO();
@@ -34,8 +34,17 @@ class ScaleService {
     return this.settingsDAO.getSettings();
   }
 
-  registerOnMeasurement(onMeasurement: (measurement:IMeasurement) => void){
-    this.scaleDAO.registerOnMeasurement(onMeasurement);
+
+  registerOnCreateMeasurement(cb: (measurement:IMeasurement) => void){
+    this.scaleDAO.registerOnCreateMeasurement(cb);
+  }
+
+  registerOnUpdateMeasurement(cb: (measurement:IMeasurement) => void){
+    this.scaleDAO.registerOnUpdateMeasurement(cb);
+  }
+
+  registerOnStoreMeasurement(cb: () => void){
+    this.scaleDAO.registerOnStoreMeasurement(cb);
   }
 
   connect():Promise<void> {

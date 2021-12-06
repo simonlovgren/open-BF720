@@ -8,9 +8,11 @@ export interface IDevice {
 
 export interface IScaleDAO {
   connect(
-    device:IDevice, 
+    device:IDevice,
   ):Promise<void>;
-  registerOnMeasurement(onMeasurement: (measurement:IMeasurement) => void);
+  registerOnCreateMeasurement(cb: (measurement:IMeasurement) => void);
+  registerOnUpdateMeasurement(cb: (measurement:IMeasurement) => void);
+  registerOnStoreMeasurement(cb: () => void);
   addUser(user: IUserProfile):Promise<IUserProfile>;
   scaleDiscovery(setting:ISettings):void;
 }

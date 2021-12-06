@@ -21,8 +21,8 @@ class MeasurementsDAO implements IMeasurementDAO {
 
   private persistMeasurements(){
     fs.writeFileSync(
-      MEASUREMENT_FILE, 
-      JSON.stringify(this.measurements, null, 2), 
+      MEASUREMENT_FILE,
+      JSON.stringify(this.measurements, null, 2),
       {encoding:'utf8',flag:'w'}
     );
   }
