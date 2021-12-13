@@ -2,7 +2,7 @@
 
 import { Service } from 'typedi';
 
-import { IDevice, ISettings } from '../interfaces/IScale';
+import { IDevice, ISettings, IDeviceInfo } from '../interfaces/IScale';
 import BF720DAO from '../integrations/BF720DAO';
 import ScaleSettingsDAO from '../integrations/ScaleSettingsDAO';
 import { IUserProfile } from '../interfaces/IUser';
@@ -34,6 +34,9 @@ class ScaleService {
     return this.settingsDAO.getSettings();
   }
 
+  getDeviceInformation():Promise<IDeviceInfo>{
+    return this.connect().then(() => this.scaleDAO.getDeviceInformation());
+  }
 
   registerOnCreateMeasurement(cb: (measurement:IMeasurement) => void){
     this.scaleDAO.registerOnCreateMeasurement(cb);

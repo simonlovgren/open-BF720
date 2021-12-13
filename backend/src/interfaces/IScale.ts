@@ -6,6 +6,18 @@ export interface IDevice {
   name?: string;
 }
 
+export interface IDeviceInfo {
+  systemId ?: string;
+  modelNumberString ?: string;
+  serialNumberString ?: string;
+  firmwareRevisionString ?: string;
+  hardwareRevisionString ?: string;
+  softwareRevisionString ?: string;
+  manufacturerNameString ?: string;
+  ieeeRegulatoryCertificationDataList ?: string;
+  pnpId ?: number;
+}
+
 export interface IScaleDAO {
   connect(
     device:IDevice,

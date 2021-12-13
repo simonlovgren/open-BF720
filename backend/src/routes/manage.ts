@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
-import { ISettings } from '../interfaces/IScale';
+import { IDeviceInfo, ISettings } from '../interfaces/IScale';
 import ScaleService from '../services/ScaleService';
 
 const manageRouter = Router();
@@ -21,6 +21,14 @@ manageRouter.get('/settings', (request, response) => {
     return response.json(settings);
   }).catch(error => {
     return response.status(404).json("No settings exist!");
+  })
+});
+
+manageRouter.get('/deviceinfo', (request, response) => {
+  scaleService.getDeviceInformation().then((deviceInfo:IDeviceInfo) => {
+    return response.json(deviceInfo);
+  }).catch(error => {
+    return response.status(404).json("No device information available!");
   })
 });
 

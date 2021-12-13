@@ -47,7 +47,7 @@ cron.schedule(config.cron_schedule_sync, async () => {
   console.log('-------------------');
   const userService = Container.get(UserService);
   const scaleService = Container.get(ScaleService);
-  
+
   for (const user of userService.listUsersProfiles()){
     console.log(`Syncing user: ${user.name}...`);
     await userService.loginUser(user).catch(error => console.log(`User sync error...${error}`));
