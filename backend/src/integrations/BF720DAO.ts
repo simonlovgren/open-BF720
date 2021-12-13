@@ -79,10 +79,10 @@
 
    // Service UUID: 0xffff (Unknown/Custom)
    // ----------------------------------------------------------------
-   userList:                            ICharacteristic = { id: '0001' }
-   initials:                            ICharacteristic = { id: '0002' }
-   activityLevel:                       ICharacteristic = { id: '0004' }
-   takeMeasurement:                     ICharacteristic = { id: '0006' }
+   userList:                            ICharacteristic = { id:    '1' }
+   initials:                            ICharacteristic = { id:    '2' }
+   activityLevel:                       ICharacteristic = { id:    '4' }
+   takeMeasurement:                     ICharacteristic = { id:    '6' }
 
    // Service UUID: 0x181c (User Data)
    // ----------------------------------------------------------------
@@ -144,13 +144,13 @@
 
    // Service UUID: 0xffff (Unknown/Custom)
    // ----------------------------------------------------------------
-   unknown_ffff_1:                      ICharacteristic = { id: '0000' }
-   // unknown_ffff_2:                   ICharacteristic = { id: '0001' } // User list
-   // unknown_ffff_3:                   ICharacteristic = { id: '0002' } // Initials
-   // unknown_ffff_4:                   ICharacteristic = { id: '0004' } // Activity level
-   unknown_ffff_5:                      ICharacteristic = { id: '0005' }
-   // unknown_ffff_6:                   ICharacteristic = { id: '0006' } // Take measurement
-   unknown_ffff_7:                      ICharacteristic = { id: '000b' }
+   unknown_ffff_1:                      ICharacteristic = { id:    '0' }
+   // unknown_ffff_2:                   ICharacteristic = { id:    '1' } // User list
+   // unknown_ffff_3:                   ICharacteristic = { id:    '2' } // Initials
+   // unknown_ffff_4:                   ICharacteristic = { id:    '4' } // Activity level
+   unknown_ffff_5:                      ICharacteristic = { id:    '5' }
+   // unknown_ffff_6:                   ICharacteristic = { id:    '6' } // Take measurement
+   unknown_ffff_7:                      ICharacteristic = { id:    'b' }
 
    /**
     * ---------------------------------------------------------------------------
