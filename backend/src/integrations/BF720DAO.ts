@@ -469,7 +469,6 @@ class Bf720DAO implements IScaleDAO {
         this.hardwareRevisionString.id,
         this.softwareRevisionString.id,
         this.manufacturerNameString.id,
-        this.ieeeRegulatoryCertificationDataList.id,
         this.pnpId.id,
       ]
     ).then(
@@ -556,9 +555,6 @@ class Bf720DAO implements IScaleDAO {
             case this.manufacturerNameString.id:
               this.manufacturerNameString.handle = characteristic;
               break;
-            case this.ieeeRegulatoryCertificationDataList.id:
-              this.ieeeRegulatoryCertificationDataList.handle = characteristic;
-              break;
             case this.pnpId.id:
               this.pnpId.handle = characteristic;
               break;
@@ -586,46 +582,38 @@ class Bf720DAO implements IScaleDAO {
    * ---------------------------------------------------------------------------
    */
   getDeviceInformation(): Promise<IDeviceInfo> {
+    const systemId               : Promise<Buffer> = this.systemId.handle.readAsync();
+    const modelNumberString      : Promise<Buffer> = this.modelNumberString.handle.readAsync();
+    const serialNumberString     : Promise<Buffer> = this.serialNumberString.handle.readAsync();
+    const firmwareRevisionString : Promise<Buffer> = this.firmwareRevisionString.handle.readAsync();
+    const hardwareRevisionString : Promise<Buffer> = this.hardwareRevisionString.handle.readAsync();
+    const softwareRevisionString : Promise<Buffer> = this.softwareRevisionString.handle.readAsync();
+    const manufacturerNameString : Promise<Buffer> = this.manufacturerNameString.handle.readAsync();
+    const pnpId                  : Promise<Buffer> = this.pnpId.handle.readAsync();
 
-    const deviceInfo : IDeviceInfo = {};
-
-    return new Promise((resolve, reject) => this.systemId.handle.readAsync().then((data: Buffer) => {
-      console.log(`System ID: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.systemId = data.toString('ascii');
-    }).then(() => this.modelNumberString.handle.readAsync()).then((data: Buffer) => {
-      console.log(`Model number string: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.modelNumberString = data.toString('ascii');
-      resolve(deviceInfo);
-    }).then(() => this.serialNumberString.handle.readAsync()).then((data: Buffer) => {
-      console.log(`Serial number string: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.serialNumberString = data.toString('ascii');
-      resolve(deviceInfo);
-    }).then(() => this.firmwareRevisionString.handle.readAsync()).then((data: Buffer) => {
-      console.log(`Firmware revision string: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.firmwareRevisionString = data.toString('ascii');
-      resolve(deviceInfo);
-    }).then(() => this.hardwareRevisionString.handle.readAsync()).then((data: Buffer) => {
-      console.log(`Hardware revision string: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.hardwareRevisionString = data.toString('ascii');
-      resolve(deviceInfo);
-    }).then(() => this.softwareRevisionString.handle.readAsync()).then((data: Buffer) => {
-      console.log(`Software revision string: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.softwareRevisionString = data.toString('ascii');
-      resolve(deviceInfo);
-    }).then(() => this.manufacturerNameString.handle.readAsync()).then((data: Buffer) => {
-      console.log(`Manufacturer name string: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.manufacturerNameString = data.toString('ascii');
-      resolve(deviceInfo);
-    }).then(() => this.ieeeRegulatoryCertificationDataList.handle.readAsync()).then((data: Buffer) => {
-      console.log(`IEEE reg list: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.ieeeRegulatoryCertificationDataList = data.toString('ascii');
-      resolve(deviceInfo);
-    }).then(() => this.pnpId.handle.readAsync()).then((data: Buffer) => {
-      console.log(`PNP ID: ${data.toString('hex')} | '${data.toString('ascii')}'`);
-      deviceInfo.pnpId = parseInt(data.toString('hex'),16);
-      console.log(deviceInfo)
-      resolve(deviceInfo);
-    }));
+    return Promise.all([
+      systemId,
+      modelNumberString,
+      serialNumberString,
+      firmwareRevisionString,
+      hardwareRevisionString,
+      softwareRevisionString,
+      manufacturerNameString,
+      pnpId
+    ]).then((responses : Array<Buffer>) => {
+        const deviceInfo : IDeviceInfo = {
+          systemId               : responses[0].toString('ascii'),
+          modelNumberString      : responses[1].toString('ascii'),
+          serialNumberString     : responses[2].toString('ascii'),
+          firmwareRevisionString : responses[3].toString('ascii'),
+          hardwareRevisionString : responses[4].toString('ascii'),
+          softwareRevisionString : responses[5].toString('ascii'),
+          manufacturerNameString : responses[6].toString('ascii'),
+          pnpId                  : parseInt(responses[7].toString('hex'), 16),
+        }
+        return deviceInfo;
+      }
+    )
   }
 
   /**
