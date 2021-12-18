@@ -21,7 +21,7 @@ function App() {
       Promise.all(measurementPromises).then((results) => {
         console.log(results);
         let measurementResults = {}
-        results.forEach(s => {measurementResults[s.data[0].id]=s.data})
+        results.forEach(s => {measurementResults[s.data[0].userId]=s.data})
         setMeasurements(measurementResults);
       })
     }
@@ -32,7 +32,7 @@ function App() {
    console.log(measurements)
   }, [measurements]);
 
-  
+
   const getUsers = () => {
     console.log('Calling API');
     axios.get(
@@ -51,9 +51,9 @@ function App() {
   return (
     <>
         {
-          Object.keys(measurements).map(key => 
+          Object.keys(measurements).map(key =>
             <>
-            <h1>{users.find(u => u.id === measurements[key][0].id).name}</h1>
+            <h1>{users.find(u => u.id === measurements[key][0].userId).name}</h1>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart data={measurements[key]}>
                 <Line type="monotone" dataKey="weightInKg" stroke="#8884d8" />
