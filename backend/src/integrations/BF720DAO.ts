@@ -569,7 +569,7 @@ class Bf720DAO implements IScaleDAO {
     const softwareRevisionString: Promise<Buffer> = this.softwareRevisionString.handle.readAsync();
     const manufacturerNameString: Promise<Buffer> = this.manufacturerNameString.handle.readAsync();
     const pnpId: Promise<Buffer> = this.pnpId.handle.readAsync();
-    const batterLevel: Promise<Buffer> = this.batteryLevel.handle.readAsync();
+    const batteryLevel: Promise<Buffer> = this.batteryLevel.handle.readAsync();
 
     return Promise.all([
       systemId,
@@ -580,7 +580,7 @@ class Bf720DAO implements IScaleDAO {
       softwareRevisionString,
       manufacturerNameString,
       pnpId,
-      batterLevel
+      batteryLevel
     ]).then((responses: Array<Buffer>) => {
       const deviceInfo: IDeviceInfo = {
         systemId: responses[0].toString('ascii'),
@@ -653,12 +653,13 @@ class Bf720DAO implements IScaleDAO {
 
     console.log(bodyCompositionMeasurement);
 
-    if (this.weightMeasurement) {
+    if (this.partialMeasurement) {
       const measurement: IMeasurement = {
         ...this.partialMeasurement,
         ...bodyCompositionMeasurement
       }
       this.onMeasurement(measurement);
+      this.partialMeasurement = undefined;
     }
   }
 }
