@@ -20,6 +20,8 @@ class MeasurementService {
   }
 
   private onMeasurement(measurement: IMeasurement): Promise<void> {
+    const user = this.userService.getUserProfile(measurement.userIndex);
+    measurement.userId = user.id;
     return this.measurementDAO.addMeasurement(measurement);
   }
 
