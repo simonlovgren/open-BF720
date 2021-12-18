@@ -456,11 +456,12 @@ class Bf720DAO implements IScaleDAO {
             case this.weightMeasurement.id:
               this.weightMeasurement.handle = characteristic;
               characteristic.on('data', (data, isNotification) => this.onWeightMeasurement(data));
-              promises.push(characteristic.subscribeAsync());
+              promises.push(characteristic.notifyAsync(true));
               break;
             case this.bodyCompositionMeasurement.id:
               this.bodyCompositionMeasurement.handle = characteristic;
               characteristic.on('data', (data, isNotification) => this.onBodyCompositionMeasurement(data));
+              promises.push(characteristic.notifyAsync(true));
               break;
             case this.userList.id:
               this.userList.handle = characteristic;
