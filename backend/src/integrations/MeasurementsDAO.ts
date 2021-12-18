@@ -11,7 +11,7 @@ class MeasurementsDAO implements IMeasurementDAO {
   measurements: IMeasurement[] = [];
 
   constructor() {
-    if(fs.existsSync(MEASUREMENT_FILE)){
+    if (fs.existsSync(MEASUREMENT_FILE)) {
       const data = fs.readFileSync(MEASUREMENT_FILE, 'utf8');
       this.measurements = JSON.parse(data);
       console.log(`${MEASUREMENT_FILE} loaded`);
@@ -19,33 +19,27 @@ class MeasurementsDAO implements IMeasurementDAO {
     }
   }
 
-  private persistMeasurements(){
+  private persistMeasurements() {
     fs.writeFileSync(
       MEASUREMENT_FILE,
       JSON.stringify(this.measurements, null, 2),
-      {encoding:'utf8',flag:'w'}
+      { encoding: 'utf8', flag: 'w' }
     );
   }
 
-  getMeasurements(user:IUser):Promise<IMeasurement[]>{
-    return new Promise((resolve, reject) => {
-      const userMeasurements = this.measurements.filter(u => u.id === user.id);
-      resolve(userMeasurements);
-    });
+  getMeasurements(user: IUser): Promise<IMeasurement[]> {
+    const userMeasurements = this.measurements.filter(u => u.userId === user.id);
+    return Promise.resolve(userMeasurements);
   }
 
-  getAllMeasurements():Promise<IMeasurement[]>{
-    return new Promise((resolve, reject) => {
-      resolve(this.measurements);
-    });
+  getAllMeasurements(): Promise<IMeasurement[]> {
+    return Promise.resolve(this.measurements);
   }
 
-  addMeasurement(measurement:IMeasurement):Promise<void>{
-    return new Promise((resolve, reject) => {
-      this.measurements.push(measurement);
-      this.persistMeasurements();
-      resolve();
-    });
+  addMeasurement(measurement: IMeasurement): Promise<void> {
+    this.measurements.push(measurement);
+    this.persistMeasurements();
+    return Promise.resolve();
   }
 }
 

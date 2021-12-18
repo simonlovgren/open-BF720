@@ -1,7 +1,7 @@
 
 
 import fs from 'fs';
-import { IUser, IUserProfile } from '../interfaces/IUser';
+import { IUserProfile } from '../interfaces/IUser';
 
 const USERS_FILE_NAME = 'users.json'
 
@@ -12,13 +12,13 @@ class UserProfileDAO {
   fileLoaded: Boolean = false;
 
   constructor() {
-    if(!fs.existsSync(USERS_FILE_NAME)){
+    if (!fs.existsSync(USERS_FILE_NAME)) {
       fs.writeFileSync(
-        USERS_FILE_NAME, 
+        USERS_FILE_NAME,
         JSON.stringify(EMPTY_USERS_OBJECT, null, 2)
       );
 
-      if(fs.existsSync(USERS_FILE_NAME))
+      if (fs.existsSync(USERS_FILE_NAME))
         this.fileLoaded = true;
 
     } else {
@@ -29,26 +29,26 @@ class UserProfileDAO {
     }
   }
 
-  getUsers():IUserProfile[]{
+  getUsers(): IUserProfile[] {
     return this.users;
   }
 
-  private persistUsers(){
+  private persistUsers() {
     fs.writeFileSync(
-      USERS_FILE_NAME, 
-      JSON.stringify(this.users, null, 2), 
-      {encoding:'utf8',flag:'w'}
+      USERS_FILE_NAME,
+      JSON.stringify(this.users, null, 2),
+      { encoding: 'utf8', flag: 'w' }
     );
   }
 
-  addUser(user:IUserProfile){
+  addUser(user: IUserProfile) {
     var usersWithoutUser = this.users.filter(u => u.id !== user.id);
     usersWithoutUser.push(user);
     this.users = usersWithoutUser;
     this.persistUsers();
   }
 
-  deleteUser(user:IUserProfile){
+  deleteUser(user: IUserProfile) {
     var usersWithoutUser = this.users.filter(u => u.consentCode !== user.consentCode);
     this.users = usersWithoutUser;
     this.persistUsers();
