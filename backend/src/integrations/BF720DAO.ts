@@ -6,9 +6,7 @@
 import noble from '@abandonware/noble';
 import { IDevice, IScaleDAO, ISettings, IDeviceInfo } from '../interfaces/IScale';
 import { IUserProfile } from '../interfaces/IUser';
-import { IMeasurement } from '../interfaces/IMeasurement';
-import { resolve } from 'path';
-import { setFlagsFromString } from 'v8';
+import { IBodyCompositionMeasurement, IMeasurement, IWeightMeasurement } from '../interfaces/IMeasurement';
 
 /**
  * -----------------------------------------------------------------------------
@@ -57,15 +55,14 @@ class Bf720DAO implements IScaleDAO {
   scale: noble.Peripheral;
   discoveredPeripherals: noble.Peripheral[] = [];
   isConnected: boolean = false;
+  partialMeasurement: IWeightMeasurement;
 
   /**
    * ---------------------------------------------------------------------------
    * Callbacks
    * ---------------------------------------------------------------------------
    */
-  onCreateMeasurement: (measurement: IMeasurement) => void;
-  onUpdateMeasurement: (measurement: IMeasurement) => void;
-  onStoreMeasurement: () => void;
+  onMeasurement: (measurement: IMeasurement) => void;
   callbackScaleReady: () => void;
 
   /**
@@ -178,15 +175,15 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
-  isScaleConnected(): boolean { return this.isConnected };
+  public isScaleConnected(): boolean { return this.isConnected };
 
   /**
    * ---------------------------------------------------------------------------
    * Method
    * ---------------------------------------------------------------------------
    */
-  registerOnCreateMeasurement(cb: (measurement: IMeasurement) => void) {
-    this.onCreateMeasurement = cb;
+  public registerOnMeasurement(cb: (measurement: IMeasurement) => void) {
+    this.onMeasurement = cb;
   }
 
   /**
@@ -194,25 +191,7 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
-  registerOnUpdateMeasurement(cb: (measurement: IMeasurement) => void) {
-    this.onUpdateMeasurement = cb;
-  }
-
-  /**
-   * ---------------------------------------------------------------------------
-   * Method
-   * ---------------------------------------------------------------------------
-   */
-  registerOnStoreMeasurement(cb: () => void) {
-    this.onStoreMeasurement = cb;
-  }
-
-  /**
-   * ---------------------------------------------------------------------------
-   * Method
-   * ---------------------------------------------------------------------------
-   */
-  scaleDiscovery(setting: ISettings = null): void {
+  public scaleDiscovery(setting: ISettings = null): void {
 
     console.log(setting)
     let discoverInterval: NodeJS.Timeout;
@@ -243,7 +222,7 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
-  getDiscovered(): IDevice[] {
+  public getDiscovered(): IDevice[] {
     return this.discoveredPeripherals.map(p => ({
       id: p.id,
       name: p.advertisement.localName,
@@ -397,10 +376,7 @@ class Bf720DAO implements IScaleDAO {
           return reject("Failed to login user");
         }
       })
-    }).then(() => {
-      this.batteryLevel.handle.readAsync();
-      return Promise.resolve();
-    });
+    })
   }
 
   /**
@@ -480,11 +456,12 @@ class Bf720DAO implements IScaleDAO {
             case this.weightMeasurement.id:
               this.weightMeasurement.handle = characteristic;
               characteristic.on('data', (data, isNotification) => this.onWeightMeasurement(data));
-              promises.push(characteristic.subscribeAsync());
+              promises.push(characteristic.notifyAsync(true));
               break;
             case this.bodyCompositionMeasurement.id:
               this.bodyCompositionMeasurement.handle = characteristic;
-              characteristic.on('data', (data, isNotification) => this.onBodyCharacteristicMeasurement(data));
+              characteristic.on('data', (data, isNotification) => this.onBodyCompositionMeasurement(data));
+              promises.push(characteristic.notifyAsync(true));
               break;
             case this.userList.id:
               this.userList.handle = characteristic;
@@ -502,7 +479,9 @@ class Bf720DAO implements IScaleDAO {
               break;
             case this.databaseChangeIncrement.id:
               this.databaseChangeIncrement.handle = characteristic;
-              characteristic.on('data', (data, isNotification) => { console.log(`DataIncrement notification: ${data.toString('hex')} | '${data.toString('ascii')}'`) })
+              characteristic.on('data', (data, isNotification) => {
+                console.log(`DataIncrement notification: ${data.toString('hex')} | '${data.toString('ascii')}'`)
+              })
               promises.push(
                 characteristic.subscribeAsync().then(() => {
                   characteristic.readAsync().then(data => {
@@ -582,14 +561,15 @@ class Bf720DAO implements IScaleDAO {
    * ---------------------------------------------------------------------------
    */
   getDeviceInformation(): Promise<IDeviceInfo> {
-    const systemId               : Promise<Buffer> = this.systemId.handle.readAsync();
-    const modelNumberString      : Promise<Buffer> = this.modelNumberString.handle.readAsync();
-    const serialNumberString     : Promise<Buffer> = this.serialNumberString.handle.readAsync();
-    const firmwareRevisionString : Promise<Buffer> = this.firmwareRevisionString.handle.readAsync();
-    const hardwareRevisionString : Promise<Buffer> = this.hardwareRevisionString.handle.readAsync();
-    const softwareRevisionString : Promise<Buffer> = this.softwareRevisionString.handle.readAsync();
-    const manufacturerNameString : Promise<Buffer> = this.manufacturerNameString.handle.readAsync();
-    const pnpId                  : Promise<Buffer> = this.pnpId.handle.readAsync();
+    const systemId: Promise<Buffer> = this.systemId.handle.readAsync();
+    const modelNumberString: Promise<Buffer> = this.modelNumberString.handle.readAsync();
+    const serialNumberString: Promise<Buffer> = this.serialNumberString.handle.readAsync();
+    const firmwareRevisionString: Promise<Buffer> = this.firmwareRevisionString.handle.readAsync();
+    const hardwareRevisionString: Promise<Buffer> = this.hardwareRevisionString.handle.readAsync();
+    const softwareRevisionString: Promise<Buffer> = this.softwareRevisionString.handle.readAsync();
+    const manufacturerNameString: Promise<Buffer> = this.manufacturerNameString.handle.readAsync();
+    const pnpId: Promise<Buffer> = this.pnpId.handle.readAsync();
+    const batteryLevel: Promise<Buffer> = this.batteryLevel.handle.readAsync();
 
     return Promise.all([
       systemId,
@@ -599,20 +579,22 @@ class Bf720DAO implements IScaleDAO {
       hardwareRevisionString,
       softwareRevisionString,
       manufacturerNameString,
-      pnpId
-    ]).then((responses : Array<Buffer>) => {
-        const deviceInfo : IDeviceInfo = {
-          systemId               : responses[0].toString('ascii'),
-          modelNumberString      : responses[1].toString('ascii'),
-          serialNumberString     : responses[2].toString('ascii'),
-          firmwareRevisionString : responses[3].toString('ascii'),
-          hardwareRevisionString : responses[4].toString('ascii'),
-          softwareRevisionString : responses[5].toString('ascii'),
-          manufacturerNameString : responses[6].toString('ascii'),
-          pnpId                  : parseInt(responses[7].toString('hex'), 16),
-        }
-        return deviceInfo;
+      pnpId,
+      batteryLevel
+    ]).then((responses: Array<Buffer>) => {
+      const deviceInfo: IDeviceInfo = {
+        systemId: responses[0].toString('ascii'),
+        modelNumberString: responses[1].toString('ascii'),
+        serialNumberString: responses[2].toString('ascii'),
+        firmwareRevisionString: responses[3].toString('ascii'),
+        hardwareRevisionString: responses[4].toString('ascii'),
+        softwareRevisionString: responses[5].toString('ascii'),
+        manufacturerNameString: responses[6].toString('ascii'),
+        pnpId: parseInt(responses[7].toString('hex'), 16),
+        batteryLevelInPct: parseInt(responses[8].toString('hex'), 16),
       }
+      return deviceInfo;
+    }
     )
   }
 
@@ -635,13 +617,13 @@ class Bf720DAO implements IScaleDAO {
 
     console.log(`${year}-${month}-${day}-${hours}-${minutes}-${seconds}`);
 
-    const measurement: IMeasurement = {
-      index: parseInt(data[10], 16),
+    const weightMeasurement: IWeightMeasurement = {
+      userIndex: parseInt(data[10], 16),
       weightInKg: 5 * weight / 1000.0, // Weight unit is 5 grams.
       timestamp: new Date(year, month - 1, day, hours, minutes, seconds).toISOString()
     }
-    console.log(measurement);
-    this.onCreateMeasurement(measurement);
+    console.log(weightMeasurement);
+    this.partialMeasurement = weightMeasurement;
   }
 
   /**
@@ -649,7 +631,7 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
-  private onBodyCharacteristicMeasurement(data) {
+  private onBodyCompositionMeasurement(data) {
     console.log("Body characteristic measurement received!")
     console.log(`Value: ${data.toString('hex')} | '${data.toString('ascii')}'`);
 
@@ -660,7 +642,7 @@ class Bf720DAO implements IScaleDAO {
     const water = (parseInt(data.slice(10, 12).reverse().toString('hex'), 16) * 5) / 1000.0;
     const impedance = parseInt(data.slice(12, 14).reverse().toString('hex'), 16) / 10.0;
 
-    const measurement: IMeasurement = {
+    const bodyCompositionMeasurement: IBodyCompositionMeasurement = {
       bodyFatInPct: bodyFat,
       bmrInJoule: bmr,
       musclesInPct: muscles,
@@ -669,11 +651,17 @@ class Bf720DAO implements IScaleDAO {
       impedanceInOhm: impedance
     }
 
-    console.log(measurement);
-    this.onUpdateMeasurement(measurement);
-    this.onStoreMeasurement();
-  }
+    console.log(bodyCompositionMeasurement);
 
+    if (this.partialMeasurement) {
+      const measurement: IMeasurement = {
+        ...this.partialMeasurement,
+        ...bodyCompositionMeasurement
+      }
+      this.onMeasurement(measurement);
+      this.partialMeasurement = undefined;
+    }
+  }
 }
 
 

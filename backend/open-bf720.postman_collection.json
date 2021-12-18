@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b5d63511-4e3f-41af-baf8-75835d42111a",
+		"_postman_id": "1eb43c20-8623-4725-944e-285f1f1a8064",
 		"name": "open-BF720",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -69,7 +69,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\":\"c8b21ecc5222\",\n    \"name\": \"scaley\",\n    \"dailySyncs\": 14\n}",
+					"raw": "{\n    \"id\":\"id here\",\n    \"name\": \"scale name here\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -97,7 +97,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"eros\",\n    \"gender\": \"m\",\n    \"dateOfBirth\":\"1980-01-01\",\n    \"heightInCm\": 175\n}",
+					"raw": "{\n    \"name\":\"Foo Bar\",\n    \"gender\": \"m\",\n    \"dateOfBirth\":\"1980-01-01\",\n    \"heightInCm\": 175\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -205,6 +205,25 @@
 					"path": [
 						"user",
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Scale device information",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/deviceinfo",
+					"host": [
+						"{{BACKEND_URL}}"
+					],
+					"port": "{{BACKEND_PORT}}",
+					"path": [
+						"manage",
+						"deviceinfo"
 					]
 				}
 			},
