@@ -1,5 +1,5 @@
 
-import { Service, Inject, Container } from 'typedi';
+import { Service, Container } from 'typedi';
 import MeasurementsDAO from '../integrations/MeasurementsDAO';
 import { IMeasurement } from '../interfaces/IMeasurement';
 import ScaleService from './ScaleService';
