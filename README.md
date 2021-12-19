@@ -22,8 +22,8 @@ The backend service comes with a REST-api, which is used by the frontend applica
 
 ## Backend / Frontend
 Individual descriptions for the backend and frontend can be found here:
-- [Backend README.md](backend/README.md)
-- [Frontend README.md](frontend/README.md)
+- [Backend README.md](backend)
+- [Frontend README.md](frontend)
 
 # Prerequisites
 - Environment for running npm/node (see configuration/installation guide(s) below)
