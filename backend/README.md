@@ -182,9 +182,7 @@ to manually sync data from the scale.
 **GET** (`/user/<userid>/measurements/sync`) syncs measurement for a user.
 ```json
 # Rest Response
-{
-    "Measurements synced for user Foo!"
-}
+"Measurements synced for user Foo!"
 ```
 _A URI with user ID added would look something like `/user/6d94500c-5024-4ffd-b1a9-358c261b98da/measurements/sync`._
 
