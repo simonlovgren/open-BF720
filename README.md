@@ -18,7 +18,7 @@ _A reverse proxy is only required if your are planning on using host names / dom
 
 This solution allows for easy storage and automatic retrieval of weight- and body composition measurements from the Beurer BF720 scale. A user only needs to weigh in, and at a predefined schedule the app will sync measurements from the scale to persistent storage (default schedule: once every 24h, at midnight).
 
-Complete list with examples: See postman collection: [backend/open-bf720.postman_collection.json](backend/open-bf720.postman_collection.json)
+The backend service comes with a REST-api, which is used by the frontend application.
 
 ## Backend / Frontend
 Individual descriptions for the backend and frontend can be found here:

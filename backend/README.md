@@ -95,6 +95,10 @@ sudo pm2 delete bf720-backend
 # Usage / Set-up of users
 In order to access measurements, the scale needs to be registered in the application and users need to be added via the application.
 
+### Postman Collection
+A complete list of API endpoints are available in the postman collection (Complete list with examples: See postman collection: [open-bf720.postman_collection.json](open-bf720.postman_collection.json)). Import it to postman and set up a postman environment with `BACKEND_URL` and `BACKEND_PORT`, and you'll have an easy way of
+viewing and testing the API.
+
 ## 0. Prepare the scale
 
 If you already have users added to the scale, you need to **_clear the user data of the scale_** to avoid duplicate users.
