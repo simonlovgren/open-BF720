@@ -2,9 +2,11 @@ import './App.css';
 
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-import axios from 'axios'
+import axios from 'axios';
+import env from 'react-dotenv';
 
-const BASE_URL = 'http://[BACKEND_IP]:[BACKEND_PORT]';
+
+const BASE_URL = `http://${env.BACKEND_URL}:${env.BACKEND_PORT}`;
 
 function App() {
   const [users, setUsers] = useState([]);
