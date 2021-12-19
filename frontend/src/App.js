@@ -42,9 +42,9 @@ function App() {
     });
   };
 
-  const getMeasurements = (id) => {
+  const getMeasurements = (userId) => {
     return axios.get(
-      `${BASE_URL}/measurements/user/?id=${id}`
+      `${BASE_URL}/user/${userId}/measurements`
     )
   };
 

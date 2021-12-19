@@ -10,7 +10,7 @@ class UserService {
   userDao: UserProfileDAO;
   @Inject()
   scaleService: ScaleService;
-  
+
   constructor() {
     this.userDao = new UserProfileDAO;
   }
@@ -41,6 +41,10 @@ class UserService {
 
   getUserProfile(index:number) : IUserProfile{
     return this.userDao.getUsers().find(u => u.index === index);
+  }
+
+  getUserProfileById(userId:string) : IUserProfile{
+    return this.userDao.getUsers().find(u => u.id === userId);
   }
 
   loginUser(user: IUserProfile) {

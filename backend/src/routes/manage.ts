@@ -1,21 +1,50 @@
+/**
+ * ===========================================================================
+ * Imports
+ * ===========================================================================
+ */
 import { Router } from 'express';
 import { Container } from 'typedi';
 import { IDeviceInfo, ISettings } from '../interfaces/IScale';
 import ScaleService from '../services/ScaleService';
 
+/**
+ * ===========================================================================
+ * Variables
+ * ===========================================================================
+ */
 const manageRouter = Router();
-
 const scaleService:ScaleService = Container.get(ScaleService);
 
+/**
+ * ===========================================================================
+ * Static routes
+ * ===========================================================================
+ */
+/**
+ * -------------------------------------
+ * Route
+ * -------------------------------------
+ */
 manageRouter.get('/', (request, response) => {
   return response.json("OK");
 });
 
+/**
+ * -------------------------------------
+ * Route
+ * -------------------------------------
+ */
 manageRouter.get('/availableScales', (request, response) => {
   const peripherals = scaleService.getAvailableScales()
   return response.json(peripherals);
 });
 
+/**
+ * -------------------------------------
+ * Route
+ * -------------------------------------
+ */
 manageRouter.get('/settings', (request, response) => {
   scaleService.getScaleSettings().then((settings:ISettings) => {
     return response.json(settings);
@@ -24,6 +53,11 @@ manageRouter.get('/settings', (request, response) => {
   })
 });
 
+/**
+ * -------------------------------------
+ * Route
+ * -------------------------------------
+ */
 manageRouter.get('/deviceinfo', (request, response) => {
   scaleService.getDeviceInformation().then((deviceInfo:IDeviceInfo) => {
     return response.json(deviceInfo);
@@ -32,6 +66,11 @@ manageRouter.get('/deviceinfo', (request, response) => {
   })
 });
 
+/**
+ * -------------------------------------
+ * Route
+ * -------------------------------------
+ */
 manageRouter.post('/settings', (request, response) => {
   const settings:ISettings = {
     id: request.body.id,
@@ -44,9 +83,19 @@ manageRouter.post('/settings', (request, response) => {
   })
 });
 
+/**
+ * -------------------------------------
+ * Route
+ * -------------------------------------
+ */
 manageRouter.get('/disconnect', (request, response) => {
   scaleService.disconnect();
   return response.json("OK");
 });
 
+/**
+ * ===========================================================================
+ * Exports
+ * ===========================================================================
+ */
 export default manageRouter;
