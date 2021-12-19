@@ -181,7 +181,7 @@ to manually sync data from the scale.
 
 **GET** (`/user/<userid>/measurements/sync`) syncs measurement for a user.
 ```json
-# Body JSON payload
+# Rest Response
 {
     "Measurements synced for user Foo!"
 }
@@ -194,6 +194,7 @@ or by fetching measurements from a specific user.
 
 **GET** (`/measurements`) gets all measurements:
 ```json
+# Rest Response
 [
     {
         "userIndex": 1,
@@ -212,6 +213,7 @@ or by fetching measurements from a specific user.
 
 **GET** (`/user/<userid>/measurements`) gets measurements for a single user:
 ```json
+# Rest Response
 [
     {
         "userIndex": 1,
