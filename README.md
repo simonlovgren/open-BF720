@@ -1,7 +1,14 @@
 # open-BF720
-Solution for automatic sync of weight measurements from a Beurer BF 720 scale. 
+Solution for automatic sync of weight measurements from a Beurer BF 720 scale.
+
+##
+
+## Description
 
 Application will sync measurements from the scale at a predefined rate (Cron schedule). Measurements are stored by the application in a file on the RPI. Synced measurements can be retreived using the application REST API.
+
+**NOTE**:
+_A reverse proxy is only required if your are planning on using host names / domain names for access. Otherwise `IP:PORT` will work fine without it._
 
 
 ![alt text](images/architecture.png)
@@ -9,40 +16,34 @@ Application will sync measurements from the scale at a predefined rate (Cron sch
 
 ## Use case
 
-Solution allows for easy storage and automatic retrieval of weight measurements from the scale. An user only needs to weigh in. At a predefined schedule the app will sync measurements from the scale to the RPI (default schedule: once every 24h, at midnight). 
+This solution allows for easy storage and automatic retrieval of weight- and body composition measurements from the Beurer BF720 scale. A user only needs to weigh in, and at a predefined schedule the app will sync measurements from the scale to persistent storage (default schedule: once every 24h, at midnight).
 
-- Supported user requests (REST):
-    - List scales (Bluetooth scan for BF720 devices)
-    - Get existing scale settings
-    - Create scale settings
-    - Register new user
-    - List all measurements
-    - List all measurements for a user
-    - Login user (sync with scale for new measurements)
+Complete list with examples: See postman collection: [backend/open-bf720.postman_collection.json](backend/open-bf720.postman_collection.json)
 
-Complete list with examples: See postman collection: **open-bf720.postman_collection.json**
+## Backend / Frontend
+Individual descriptions for the backend and frontend can be found here:
+- [Backend README.md](backend/README.md)
+- [Frontend README.md](frontend/README.md)
 
 # Prerequisites
-- Environment for running npm/node 
-- Bluetooth BLE dongle
-
-Instructions in this readme: installing application on Raspberry Pi 4 running Arch linux OS
-
-## Configuring Rpi (Arch linux)
+- Environment for running npm/node (see configuration/installation guide(s) below)
+- Bluetooth BLE dongle **OR** Raspberry Pi with built-in BLE
 
 
-### Bluetooth
+# Configuring Rasberry Pi (Arch linux)
+
+## Bluetooth
 
 Install bluetooth pacman packages:
 ```sh
-$ sudo pacman -Sy bluez bluez-libs bluez-utils
+sudo pacman -Sy bluez bluez-libs bluez-utils
 ```
 
 Check if the the kernel found the bluetooth device:
-```sh 
-$ sudo dmesg | grep Bluetooth
+```sh
+sudo dmesg | grep Bluetooth
 
-> 
+>
 [    9.801493] Bluetooth: Core ver 2.22
 [    9.801545] Bluetooth: HCI device and connection manager initialized
 [    9.801562] Bluetooth: HCI socket layer initialized
@@ -57,7 +58,7 @@ $ sudo dmesg | grep Bluetooth
 
 Check that bluetooth service is running
 ```
-$ systemctl status bluetooth
+systemctl status bluetooth
 
 > bluetooth.service - Bluetooth service
      Loaded: loaded (/usr/lib/systemd/system/bluetooth.service; enabled; vendor preset: disabled)
@@ -68,177 +69,129 @@ $ systemctl status bluetooth
       Tasks: 1 (limit: 4915)
      CGroup: /system.slice/bluetooth.service
              `-302 /usr/lib/bluetooth/bluetoothd
-``` 
+```
 
 If not, enable and start the service:
 
 ```sh
-$ sudo systemctl enable bluetooth
-$ sudo systemctl start bluetooth
+sudo systemctl enable bluetooth
+sudo systemctl start bluetooth
 ```
 
 ## NPM & Node
 Install nodejs and NPM
 ```sh
-$ sudo pacman -Sy nodejs
-$ sudo pacman -Sy npm
+sudo pacman -Sy nodejs
+sudo pacman -Sy npm
 ```
 
 Check installed versions:
 ```sh
 # Versions
-$ node --version
+node --version
 > v15.5.1
 
-$ npm --version
+npm --version
 > 6.14.11
 ```
 
+## Raw access to Bluetooth device
 Grant the node binary **cap_net_raw privileges**, so it can start/stop BLE advertising.
 ```sh
 sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 ```
 
-## PM2 - Process manager for node.js
-PM2 is used to ensure that the application is running reliably and automatically (if the Rpi would restart).
+# Configuring Rasberry Pi (Raspberry Pi OS)
+## Bluetooth
+Bluetooth is supported out-of-the-box and you should not need to install any packages.
 
-Install pm2
+Check if the the kernel found the bluetooth device:
 ```sh
-$ sudo npm install -g pm2
+sudo dmesg | grep Bluetooth
+
+[   13.012254] Bluetooth: Core ver 2.22
+[   13.012327] Bluetooth: HCI device and connection manager initialized
+[   13.012350] Bluetooth: HCI socket layer initialized
+[   13.012360] Bluetooth: L2CAP socket layer initialized
+[   13.012375] Bluetooth: SCO socket layer initialized
+[   13.702776] Bluetooth: HCI UART driver ver 2.3
+[   13.702787] Bluetooth: HCI UART protocol H4 registered
+[   13.702849] Bluetooth: HCI UART protocol Three-wire (H5) registered
+[   13.703552] Bluetooth: HCI UART protocol Broadcom registered
+[   14.036937] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[   14.036947] Bluetooth: BNEP filters: protocol multicast
+[   14.036960] Bluetooth: BNEP socket layer initialized
 ```
 
-Register pm2 to start automatically at RPI boot
-```sh
-$ sudo pm2 startup
+Check that bluetooth service is running
+```
+systemctl status bluetooth
+
+● bluetooth.service - Bluetooth service
+     Loaded: loaded (/lib/systemd/system/bluetooth.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sat 2021-12-11 13:24:24 GMT; 1 weeks 1 days ago
+       Docs: man:bluetoothd(8)
+   Main PID: 612 (bluetoothd)
+     Status: "Running"
+      Tasks: 1 (limit: 4915)
+        CPU: 109ms
+     CGroup: /system.slice/bluetooth.service
+             └─612 /usr/libexec/bluetooth/bluetoothd
 ```
 
-# Application configuration
-The application will need to be configured before use. 
-
-Two configuration are required:
-1. Application boot configuration
-    - **Port** - for exposing the endpoint (default 3000)
-    - **Debug level** - (default: warn)
-    - **Cron schedule** - (default: once per day 1 min past midnight: '1 0 * * *')
-2. Scale & User configuration in application
-    - Scan for bluetooth scale and register it in app
-    - Add user(s)
-
-## Application boot configuration
-Rename the **example.env** file to **.env** file and edit the corresponding paramaters.
-
-## Scale & User configuration in application
-
-### 1. Begin with making a request for available scales
-
-GET (/manage/availableScales): List scales:
-``` json
-# Rest Response
-[
-    {
-        "id": "c8b21ecc5222",
-        "name": "BF720"
-    }
-]
-```
-### 2. Create scale setting 
-Take id from the found scale and send the following POST request:
-
-POST (/manage/settings): Create scaling setting
-``` json
-# Body JSON payload
-{
-    "id": "c8b21ecc5222",
-    "name": "My BF720 scale"
-}
-```
-
-### 3. Add an user by sending the following POST request
-
-POST (/user/add): Add new user
-```json
-# Body JSON payload
-{
-    "name":"Foo",
-    "gender": "m",
-    "dateOfBirth":"1930-01-01",
-    "heightInCm": 177
-}
-```
-
-**Note**: The scale will turn on. The user that is being registered should now stand on in att wait for the intial measurement to complete.
-
-### 4. Confirm that the user exists
-
-GET(/user/): List users
-```json
-# Rest Response
-[
-    {
-        "id": "6d94500c-5024-4ffd-b1a9-358c261b98da",
-        "name": "Foo",
-        "initials": "F",
-        "heightInCm": 156,
-        "gender": "m",
-        "dateOfBirth": "1985-03-02",
-        "consentCode": 9490,
-        "index": 1
-    }
-]
-```
-
-### 5. To check(sync) for new measurements (stored on the scale) 
-
-POST(/user/login): Login user
-```json
-# Body JSON payload
-{
-    "userIndex":1
-}
-```
-
-### 6. Fetch all stored measurements
-
-GET (/measurements/): Get all measurements
-```json
-[
-    {
-        "index": 1,
-        "weightInKg": 77.34,
-        "timestamp": "2021-01-03T19:53:53.000Z",
-        "id": "6d94800c-5024-4ffd-b1a9-358c261b98da"
-    }
-]
-```
-
-The scale and application are now correctly set up with one registered user. Register more users by repeating **step 3**.
-
-# Build application
+If not, enable and start the service:
 
 ```sh
-$ npm install
-$ npm build
+sudo systemctl enable bluetooth
+sudo systemctl start bluetooth
 ```
 
-# Run
+## NPM & Node
+_There are probably better ways to do this, but it was the first of many that actually worked._
 
+NodeJS and NPM are not especially updated if using _apt_ (12.22.5 vs 16+), so we need perform a manual install.
+This is based on the article [Install Node.js and Npm latest Version on Raspberry Pi 4?](https://officialrajdeepsingh.dev/install-node-js-and-npm-latest-version-on-raspberry-pi-4/).
+
+**NOTE:**
+If you already have node/nodejs installed, **you must install the old version before proceeding**.
+
+First, determine which architecture (`armv7l` or `armv8l`) the device is running via:
 ```sh
-$ npm start
+uname -m
 ```
 
-## Run using pm2 (Preferred option)
+Then navigate to [nodejs.org](https://nodejs.org/en/download/) and their (alternative) downloads page.
+Locate the version of `Linux Binaries (ARM)` matching your architecture and _copy the link_ (right-click > copy link address).
 
+Open a shell and navigate to Downloads or a temporary directory, then run:
 ```sh
-$ pwd
-> ~/open-BF720
-
-$ ls 
-> README.md  build  measurements.json  node_modules  nodemon.json  package-lock.json  package.json  scale_settings.json  src  tsconfig.json  users.json
-
-$ sudo pm2 start build/app.js
+wget <url to binaries>
 ```
 
-Save the running application. (PM2 will now automatically start the application if RPI reboots)
+After the download completes, extract the tarball via:
 ```sh
-$ sudo pm2 save
+tar -xf <downloaded file>
+```
+
+Now, navigate into the extracted directory and remove unnecessary files:
+```sh
+rm CHANGELOG.md LICENSE README.md
+```
+
+Then we copy the rest to `/usr/local/bin` via:
+```sh
+sudo cp -r * /usr/local/
+```
+
+Finally we need to re-start the shell for it to properly find our new binaries.
+Test that it works properly via:
+```sh
+node -v && npm -v
+```
+
+## Raw access to Bluetooth device
+In order for node to access the bluetooth device/dongle and start/stop BLE advertising, we need to grant the node binary
+**cap_net_raw privileges**. This is easiest done via:
+```sh
+sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 ```
