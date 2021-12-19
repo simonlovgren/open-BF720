@@ -58,19 +58,6 @@ manageRouter.get('/settings', (request, response) => {
  * Route
  * -------------------------------------
  */
-manageRouter.get('/deviceinfo', (request, response) => {
-  scaleService.getDeviceInformation().then((deviceInfo:IDeviceInfo) => {
-    return response.json(deviceInfo);
-  }).catch(error => {
-    return response.status(404).json("No device information available!");
-  })
-});
-
-/**
- * -------------------------------------
- * Route
- * -------------------------------------
- */
 manageRouter.post('/settings', (request, response) => {
   const settings:ISettings = {
     id: request.body.id,
@@ -80,6 +67,19 @@ manageRouter.post('/settings', (request, response) => {
     return response.json("Settings updated!");
   }).catch(error => {
     return response.status(404).json("Failed to set setting");
+  })
+});
+
+/**
+ * -------------------------------------
+ * Route
+ * -------------------------------------
+ */
+manageRouter.get('/deviceinfo', (request, response) => {
+  scaleService.getDeviceInformation().then((deviceInfo:IDeviceInfo) => {
+    return response.json(deviceInfo);
+  }).catch(error => {
+    return response.status(404).json("No device information available!");
   })
 });
 

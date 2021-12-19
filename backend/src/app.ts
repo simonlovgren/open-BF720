@@ -13,6 +13,7 @@ import { Container } from 'typedi';
 import ScaleService from './services/ScaleService';
 const cors = require('cors')
 
+require( 'console-stamp' )( console );
 require('./loader').default();
 
 const logger = pino({ level: config.logs.level });
@@ -50,7 +51,7 @@ cron.schedule(config.cron_schedule_sync, async () => {
     console.log(`Syncing user: ${user.name}...`);
     await userService.loginUser(user)
       .catch(error => console.log(`User sync error...${error}`));
-    await sleep(20000);
+    await sleep(10000); // Empirically tested, 30 measurements (max stored in scale per user) took ~3s to tranfer
     console.log(`Sync for user completed.`);
   }
   console.log(`All users synced. Disconnecting...`);

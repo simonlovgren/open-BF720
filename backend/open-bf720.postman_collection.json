@@ -1,233 +1,272 @@
 {
 	"info": {
-		"_postman_id": "1eb43c20-8623-4725-944e-285f1f1a8064",
+		"_postman_id": "56abebd9-8b15-49cc-96cf-0c30132b0d99",
 		"name": "open-BF720",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Disconnect scale",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/disconnect",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"manage",
-						"disconnect"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "List scales",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/availableScales",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"manage",
-						"availableScales"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Scale settings",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/settings",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"manage",
-						"settings"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create settings",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id\":\"id here\",\n    \"name\": \"scale name here\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "User",
+			"item": [
+				{
+					"name": "Add user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Foo Bar\",\n    \"gender\": \"m\",\n    \"dateOfBirth\":\"1980-01-01\",\n    \"heightInCm\": 175\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/add",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"user",
+								"add"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/settings",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"manage",
-						"settings"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add user",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\":\"Foo Bar\",\n    \"gender\": \"m\",\n    \"dateOfBirth\":\"1980-01-01\",\n    \"heightInCm\": 175\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "List users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"user",
+								""
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/add",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"user",
-						"add"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get all measurements",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/measurements/",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"measurements",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "List users",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"user",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get measurement for user",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/measurements/user/?id=d4bdd31f-d49b-4c8a-af34-1529e3e8b960",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"measurements",
-						"user",
-						""
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "d4bdd31f-d49b-4c8a-af34-1529e3e8b960"
+				{
+					"name": "Get user profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/:userid",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"user",
+								":userid"
+							],
+							"variable": [
+								{
+									"key": "userid",
+									"value": "2f466b66-8017-42cd-ac60-ddd524184bde"
+								}
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Login user",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"userIndex\":1\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/login",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"user",
-						"login"
-					]
+				{
+					"name": "Get measurements for user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/:userid/measurements",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"user",
+								":userid",
+								"measurements"
+							],
+							"variable": [
+								{
+									"key": "userid",
+									"value": "2f466b66-8017-42cd-ac60-ddd524184bde"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync measurements from scale for user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/user/:userid/measurements/sync",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"user",
+								":userid",
+								"measurements",
+								"sync"
+							],
+							"variable": [
+								{
+									"key": "userid",
+									"value": "2f466b66-8017-42cd-ac60-ddd524184bde"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Scale device information",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/deviceinfo",
-					"host": [
-						"{{BACKEND_URL}}"
-					],
-					"port": "{{BACKEND_PORT}}",
-					"path": [
-						"manage",
-						"deviceinfo"
-					]
+			"name": "Scale",
+			"item": [
+				{
+					"name": "List scales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/availableScales",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"manage",
+								"availableScales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disconnect scale",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/disconnect",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"manage",
+								"disconnect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set scale settings",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"id here\",\n    \"name\": \"scale name here\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/settings",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"manage",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Scale settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/settings",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"manage",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Scale device information",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/manage/deviceinfo",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"manage",
+								"deviceinfo"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "General",
+			"item": [
+				{
+					"name": "Get all measurements",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}:{{BACKEND_PORT}}/measurements/",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"port": "{{BACKEND_PORT}}",
+							"path": [
+								"measurements",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
