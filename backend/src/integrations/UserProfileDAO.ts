@@ -1,17 +1,40 @@
 
-
+/**
+ * -----------------------------------------------------------------------------
+ * Imports
+ * -----------------------------------------------------------------------------
+ */
 import fs from 'fs';
 import { IUserProfile } from '../interfaces/IUser';
 
+/**
+ * -----------------------------------------------------------------------------
+ * Defines
+ * -----------------------------------------------------------------------------
+ */
 const USERS_FILE_NAME = 'users.json'
-
 const EMPTY_USERS_OBJECT = [];
 
+/**
+ * -----------------------------------------------------------------------------
+ * Module class
+ * -----------------------------------------------------------------------------
+ */
 class UserProfileDAO {
+  /**
+   * ---------------------------------------------------------------------------
+   * Attributes
+   * ---------------------------------------------------------------------------
+   */
   users: IUserProfile[] = [];
   fileLoaded: Boolean = false;
 
-  constructor() {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public constructor() {
     if (!fs.existsSync(USERS_FILE_NAME)) {
       fs.writeFileSync(
         USERS_FILE_NAME,
@@ -29,10 +52,20 @@ class UserProfileDAO {
     }
   }
 
-  getUsers(): IUserProfile[] {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public getUsers(): IUserProfile[] {
     return this.users;
   }
 
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
   private persistUsers() {
     fs.writeFileSync(
       USERS_FILE_NAME,
@@ -41,15 +74,46 @@ class UserProfileDAO {
     );
   }
 
-  addUser(user: IUserProfile) {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public addUser(user: IUserProfile) {
+    this.users.push(user);
+    this.persistUsers();
+  }
+
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public updateUser(user: IUserProfile) {
     var usersWithoutUser = this.users.filter(u => u.id !== user.id);
     usersWithoutUser.push(user);
     this.users = usersWithoutUser;
     this.persistUsers();
   }
 
-  deleteUser(user: IUserProfile) {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public deleteUser(user: IUserProfile) {
     var usersWithoutUser = this.users.filter(u => u.consentCode !== user.consentCode);
+    this.users = usersWithoutUser;
+    this.persistUsers();
+  }
+
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public deleteUserById(userId: String) {
+    var usersWithoutUser = this.users.filter(u => u.id !== userId);
     this.users = usersWithoutUser;
     this.persistUsers();
   }

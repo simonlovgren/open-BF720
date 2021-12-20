@@ -234,7 +234,7 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
-  connect(
+  public connect(
     deviceId: IDevice,
   ): Promise<void> {
     const scale = this.discoveredPeripherals.find(p => p.id === deviceId.id);
@@ -267,7 +267,7 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
-  addUser(user: IUserProfile): Promise<IUserProfile> {
+  public addUser(user: IUserProfile): Promise<IUserProfile> {
     const createUserMessage = (): Buffer => {
       console.log(`Prepare consent code: ${user.consentCode}`)
       var head = Buffer.alloc(1);
@@ -318,6 +318,25 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
+  public updateUser(user: IUserProfile): Promise<IUserProfile> {
+    return this.loginUser(user).then(
+      () => this.setUserProfile(user)
+    ).then(
+      () => this.databaseChangeIncrement.handle.writeAsync(Buffer.from([1, 0, 0, 0]), false)
+    ).then(
+      () => {
+        return new Promise((resolve, reject) => {
+            resolve(user);
+        })
+      }
+    );
+  }
+
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
   private setUserProfile(user: IUserProfile): Promise<void> {
     const birth = new Date(user.dateOfBirth);
 
@@ -351,7 +370,7 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
-  loginUser(user: IUserProfile): Promise<void> {
+  public loginUser(user: IUserProfile): Promise<void> {
     const createLoginUserMessage = (): Buffer => {
       var head = Buffer.alloc(1);
       head[0] = REQUEST_OP_CODE_LOGIN_USER;
@@ -560,7 +579,7 @@ class Bf720DAO implements IScaleDAO {
    * Method
    * ---------------------------------------------------------------------------
    */
-  getDeviceInformation(): Promise<IDeviceInfo> {
+  public getDeviceInformation(): Promise<IDeviceInfo> {
     const systemId: Promise<Buffer> = this.systemId.handle.readAsync();
     const modelNumberString: Promise<Buffer> = this.modelNumberString.handle.readAsync();
     const serialNumberString: Promise<Buffer> = this.serialNumberString.handle.readAsync();

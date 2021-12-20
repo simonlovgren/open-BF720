@@ -1,5 +1,8 @@
-
-
+/**
+ * -----------------------------------------------------------------------------
+ * Imports
+ * -----------------------------------------------------------------------------
+ */
 import { Service } from 'typedi';
 
 import { IDevice, ISettings, IDeviceInfo } from '../interfaces/IScale';
@@ -8,12 +11,27 @@ import ScaleSettingsDAO from '../integrations/ScaleSettingsDAO';
 import { IUserProfile } from '../interfaces/IUser';
 import { IMeasurement } from '../interfaces/IMeasurement';
 
+/**
+ * -----------------------------------------------------------------------------
+ * Service class
+ * -----------------------------------------------------------------------------
+ */
 @Service()
 class ScaleService {
+  /**
+   * ---------------------------------------------------------------------------
+   * Attributes
+   * ---------------------------------------------------------------------------
+   */
   scaleDAO: BF720DAO;
   settingsDAO: ScaleSettingsDAO;
 
-  constructor() {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public constructor() {
     this.scaleDAO = new BF720DAO();
     this.settingsDAO = new ScaleSettingsDAO();
 
@@ -22,27 +40,57 @@ class ScaleService {
     );
   }
 
-  getAvailableScales(): IDevice[] {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public getAvailableScales(): IDevice[] {
     return this.scaleDAO.getDiscovered();
   }
 
-  setScaleSettings(settings: ISettings) {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public setScaleSettings(settings: ISettings) {
     return this.settingsDAO.updateSettings(settings);
   }
 
-  getScaleSettings(): Promise<ISettings> {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public getScaleSettings(): Promise<ISettings> {
     return this.settingsDAO.getSettings();
   }
 
-  getDeviceInformation(): Promise<IDeviceInfo> {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public getDeviceInformation(): Promise<IDeviceInfo> {
     return this.connect().then(() => this.scaleDAO.getDeviceInformation());
   }
 
-  registerOnMeasurement(cb: (measurement: IMeasurement) => void) {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public registerOnMeasurement(cb: (measurement: IMeasurement) => void) {
     this.scaleDAO.registerOnMeasurement(cb);
   }
 
-  private connect(): Promise<void> {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+   private connect(): Promise<void> {
     if (!this.scaleDAO.isScaleConnected()) {
       return this.settingsDAO.getSettings().then(settings => {
         const device: IDevice = { id: settings.id };
@@ -54,18 +102,44 @@ class ScaleService {
     }
   }
 
-  addUserToScale(user: IUserProfile): Promise<IUserProfile> {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public addUserToScale(user: IUserProfile): Promise<IUserProfile> {
     return this.connect().then(
       () => this.scaleDAO.addUser(user)
     );
   }
 
-  loginUser(user: IUserProfile): Promise<void> {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+   public updateUser(user: IUserProfile): Promise<IUserProfile> {
+    return this.connect().then(
+      () => this.scaleDAO.updateUser(user)
+    );
+  }
+
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public loginUser(user: IUserProfile): Promise<void> {
     return this.connect()
       .then(() => this.scaleDAO.loginUser(user));
   }
 
-  disconnect() {
+  /**
+   * ---------------------------------------------------------------------------
+   * Method
+   * ---------------------------------------------------------------------------
+   */
+  public disconnect() {
     this.scaleDAO.disconnect();
   }
 
