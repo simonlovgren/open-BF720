@@ -3,7 +3,6 @@
  * Imports
  * -----------------------------------------------------------------------------
  */
-import { resolve } from 'path';
 import { Service, Inject } from 'typedi';
 import UserProfileDAO from '../integrations/UserProfileDAO';
 import { IUserProfileInput, IUserProfile } from '../interfaces/IUser';
@@ -31,7 +30,7 @@ class UserService {
    * Method
    * ---------------------------------------------------------------------------
    */
-   public constructor() {
+  public constructor() {
     this.userDao = new UserProfileDAO;
   }
 
@@ -47,7 +46,7 @@ class UserService {
    * Method
    * ---------------------------------------------------------------------------
    */
-  public addNewUser(userInput:IUserProfileInput):Promise<void> {
+  public addNewUser(userInput: IUserProfileInput): Promise<void> {
     var user: IUserProfile = {
       id: uuidv4(),
       ...userInput,
@@ -72,7 +71,7 @@ class UserService {
    * Method
    * ---------------------------------------------------------------------------
    */
-    public updateUser(userProfile:IUserProfile):Promise<IUserProfile> {
+  public updateUser(userProfile: IUserProfile): Promise<IUserProfile> {
     return this.scaleService.updateUser(userProfile).then(
       userProfile => {
         console.log(`User with ID ${userProfile.id} was updated.`);
@@ -86,7 +85,7 @@ class UserService {
    * Method
    * ---------------------------------------------------------------------------
    */
-  public deleteUser(userId:String) : void {
+  public deleteUser(userId: String): void {
     // TODO: Use userControlPoint in scaleDao to delete user on scale?
     this.userDao.deleteUserById(userId);
   }
@@ -96,7 +95,7 @@ class UserService {
    * Method
    * ---------------------------------------------------------------------------
    */
-   public listUsersProfiles() : IUserProfile[]{
+  public listUsersProfiles(): IUserProfile[] {
     return this.userDao.getUsers();
   }
 
@@ -105,7 +104,7 @@ class UserService {
    * Method
    * ---------------------------------------------------------------------------
    */
-   public getUserProfile(index:number) : IUserProfile{
+  public getUserProfile(index: number): IUserProfile {
     return this.userDao.getUsers().find(u => u.index === index);
   }
 
@@ -114,7 +113,7 @@ class UserService {
    * Method
    * ---------------------------------------------------------------------------
    */
-   public getUserProfileById(userId:string) : IUserProfile{
+  public getUserProfileById(userId: string): IUserProfile {
     return this.userDao.getUsers().find(u => u.id === userId);
   }
 
@@ -123,7 +122,7 @@ class UserService {
    * Method
    * ---------------------------------------------------------------------------
    */
-   public loginUser(user: IUserProfile) {
+  public loginUser(user: IUserProfile) {
     return this.scaleService.loginUser(user);
   }
 

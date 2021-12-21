@@ -247,7 +247,7 @@ class Bf720DAO implements IScaleDAO {
     } else {
       const error = `Peripheral ${deviceId.id} not found in discovered list.`;
       console.log(error);
-      return new Promise((resolve, reject) => reject(error));
+      return Promise.reject(error);
     }
   }
 
@@ -325,9 +325,7 @@ class Bf720DAO implements IScaleDAO {
       () => this.databaseChangeIncrement.handle.writeAsync(Buffer.from([1, 0, 0, 0]), false)
     ).then(
       () => {
-        return new Promise((resolve, reject) => {
-            resolve(user);
-        })
+        return Promise.resolve(user);
       }
     );
   }
