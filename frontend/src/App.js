@@ -6,17 +6,7 @@ import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Responsi
 import axios from 'axios';
 import env from 'react-dotenv';
 
-
 const BASE_URL = `http://${env.BACKEND_URL}:${env.BACKEND_PORT}`;
-
-const COLOR_OPTIONS = [
-  '#7CD1B8',
-  '#71DFE7',
-  '#FA744F',
-  '#FF5F7E',
-  '#142F43',
-  '#4AA96C'
-]
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -93,7 +83,7 @@ function App() {
                       <YAxis type="number" domain={[dataMin => (Math.floor(dataMin-3)),dataMax => (Math.ceil(dataMax+3))]}/>
                       <CartesianGrid stroke="#ccc" vertical={false} strokeDasharray="3" />
                       <Tooltip />
-                      <Area type="monotone" dataKey="weightInKg" stroke={COLOR_OPTIONS[0]} fill={COLOR_OPTIONS[0]} strokeWidth={2} dot={false} />
+                      <Area type="monotone" dataKey="weightInKg" stroke="#7CD1B8" fill="#7CD1B8" strokeWidth={2} dot={false} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -107,8 +97,8 @@ function App() {
                       <Tooltip />
                       <Legend />
                       <Area type="monotone" stackId="1" dataKey="bodyFatInPct" name='BodyFat' stroke="#ffc658" fill="#ffc658" strokeWidth={2} dot={false} />
-                      <Area type="monotone" stackId="1" dataKey="musclesInPct" name='Muscle' stroke={COLOR_OPTIONS[2]} fill={COLOR_OPTIONS[2]} strokeWidth={2} dot={false} />
-                      <Area type="monotone" stackId="1" dataKey="waterInPct" name='Water' stroke={COLOR_OPTIONS[6]} fill={COLOR_OPTIONS[6]} strokeWidth={2} dot={false} />
+                      <Area type="monotone" stackId="1" dataKey="musclesInPct" name='Muscle' stroke="#FA744F" fill="#FA744F" strokeWidth={2} dot={false} />
+                      <Area type="monotone" stackId="1" dataKey="waterInPct" name='Water' strokeWidth={2} dot={false} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
