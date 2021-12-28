@@ -1,19 +1,15 @@
+.userdata h1 {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0 0 0.5em 0;
+    margin: 0;
+}
+
 @media (max-width: 480px)
 {
     .userdata {
         margin: 1em 1em 0 1em;
-    }
-
-    .userdata h1 {
-        font-weight: lighter;
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding: 0 0 0.5em 0;
-        margin: 0;
-        font-size: 2em;
-        color: #666666;
-        text-shadow: 0px 1px #ffffff;
     }
 
     .userdata .charts {
@@ -44,18 +40,6 @@
 {
     .userdata {
         margin: 5em 5em 0 5em;
-    }
-
-    .userdata h1 {
-        font-weight: lighter;
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding: 0 0 0.5em 0;
-        margin: 0;
-        font-size: 3em;
-        color: #666666;
-        text-shadow: 0px 1px #ffffff;
     }
 
     .userdata .charts {

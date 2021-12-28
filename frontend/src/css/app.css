@@ -1,4 +1,140 @@
 body {
-  font-family: 'Manrope', sans-serif;
-  background-color: #eeeeee;
+    font-family: 'Manrope', sans-serif;
+    font-weight: lighter;
+    background-color: #eeeeee;
+    color: #666666;
+}
+
+h1 {
+    font-weight: lighter;
+    font-size: 3.2vw;
+    text-shadow: 0px 1px #ffffff;
+}
+
+/* Profile listing */
+#profile-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#profile-list h1{
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0 0 0.5em 0;
+    margin: 0;
+}
+
+#profile-list .profiles{
+    display: flex;
+    justify-content: center;
+    margin: 0 -2vw;
+    padding: 0;
+}
+
+#profile-list .profile {
+    list-style: none;
+    margin: 0 2vw;
+    padding: 0;
+
+    width: 10vw;
+    max-width: 200px;
+    min-width: 100px;
+}
+
+#profile-list .profile-link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #666666;
+}
+
+#profile-list .profile-link:hover .profile-icon,
+#profile-list .profile-link:hover .add-profile-icon {
+    border: 0.2em solid #ffffff80;
+}
+
+#profile-list .profile-link:hover {
+    color: #66666680;
+}
+
+#profile-list .profile-icon,
+#profile-list .add-profile-icon {
+    height: 10vw;
+    width: 10vw;
+    max-height: 200px;
+    max-width: 200px;
+    min-height: 100px;
+    min-width: 100px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    text-decoration: none;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    background-color: #777;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: none;
+}
+
+#profile-list .profile-name {
+    line-height: 1.2em;
+    min-height: 1.8em;
+    display: block;
+    text-align: center;
+    font-size: 1.3vw;
+    margin: 0.6em 0;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-shadow: 0px 1px #ffffff;
+    font-weight: lighter;
+}
+
+/* Size specific rules */
+@media (max-width: 1024px)
+{
+    h1 {
+        font-weight: lighter;
+        font-size: 5.5vw;
+        text-shadow: 0px 1px #ffffff;
+    }
+
+    /* profile listing */
+    #profile-list .profile {
+        width: 12vw;
+    }
+
+    #profile-list .profile-icon,
+    #profile-list .add-profile-icon {
+        height: 12vw;
+        width: 12vw;
+    }
+
+    #profile-list .profile-name {
+        font-weight: normal;
+        font-size: 1.8vw;
+    }
+}
+
+@media (max-width: 480px)
+{
+    h1 {
+        font-weight: lighter;
+        font-size: 10vw;
+        text-shadow: 0px 1px #ffffff;
+    }
+
+    /* profile listing */
+    #profile-list .profile-name {
+        font-weight: normal;
+        font-size: 3.5vw;
+    }
 }

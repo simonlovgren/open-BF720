@@ -12,7 +12,12 @@
     "lint": "npm run lint:js ",
     "lint:eslint": "eslint --ignore-path .gitignore --ext .ts",
     "lint:js": "npm run lint:eslint src/",
-    "lint:fix": "npm run lint:js -- --fix"
+    "lint:fix": "npm run lint:js -- --fix",
+    "update": "git fetch && git rebase",
+    "pm2-deploy": "sudo pm2 start --name $npm_package_name ./build/app.js",
+    "pm2-remove": "sudo pm2 stop $npm_package_name && sudo pm2 delete $npm_package_name",
+    "pm2-save": "sudo pm2 save",
+    "pm2-restart": "sudo pm2 restart $npm_package_name"
   },
   "repository": {
     "type": "git",
