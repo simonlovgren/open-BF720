@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams, Link } from 'react-router-dom'
 import axios from 'axios';
 import env from 'react-dotenv';
+import Identicon from './identicon';
 
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { identifier } from '@babel/types';
 
 const BASE_URL = `http://${env.BACKEND_URL}:${env.BACKEND_PORT}`;
 
@@ -59,7 +61,11 @@ export default function User() {
     return (
         <div class='userdata'>
             <>
-                <h1>{userProfile.name}</h1>
+                <div id="header">
+                    <Identicon userid={userid}/>
+                    <h1>{userProfile.name}</h1>
+                    <div class="clr"/>
+                </div>
                 <div class="charts">
                     <div class="user-chart">
                         <h2>Weight</h2>

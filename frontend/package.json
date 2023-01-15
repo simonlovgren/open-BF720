@@ -13,7 +13,9 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.0",
     "recharts": "^2.0.10",
-    "web-vitals": "^1.1.1"
+    "web-vitals": "^1.1.1",
+    "uuid": "^8.3.2",
+    "seedrandom" : "^3.0.5"
   },
   "scripts": {
     "start": "react-dotenv && react-scripts start",

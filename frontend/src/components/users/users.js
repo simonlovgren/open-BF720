@@ -3,6 +3,7 @@ import { useHistory, useParams, Link } from 'react-router-dom'
 
 import axios from 'axios';
 import env from 'react-dotenv';
+import Identicon from '../user/identicon';
 
 const BASE_URL = `http://${env.BACKEND_URL}:${env.BACKEND_PORT}`;
 
@@ -29,7 +30,7 @@ export default function Users(props) {
                         <li key={user.id} className="profile">
                             <Link to={`/user/${user.id}`} className="profile-link">
                                 <div className="avatar-wrapper">
-                                    <div className="profile-icon"/>
+                                    <Identicon userid={user.id}/>
                                 </div>
                                 <p className="profile-name">{user.name}</p>
                             </Link>
